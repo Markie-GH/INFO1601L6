@@ -2,87 +2,72 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>repl.it</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <title>Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
 <body>
-  <img id="myimg" src="https://cdn.loveandlemons.com/wp-content/uploads/2023/06/homemade-ice-cream-recipe.jpg" alt="ice cm" width="200" height="200" onload="loaded()">
+  <nav>
+    <div class="nav-wrapper teal" style="padding-left: 10px;">
+      <a href="#!" class="brand-logo">Ajax Demo</a>
+    </div>
+  </nav>
+  <main class="row" style="padding: 40px">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>name</th>
+          <th>Type</th>
+          <th>website</th>
+        </tr>
+      </thead>
+      <tbody id="result">
 
-
-  <h1>My Page</h1>
-  <input id="myBtn" type="button" onclick="myFun()" value="click me"/>
-
-  <input type="button" id="alertBtn" value="alert" onclick="alertFun()" />
-  <input type="button" value="confirm" onclick="confirmFun()" />
-  <input type="button" value="prompt" onclick="promptFun()" />
-
-  <span id="result"></span>
-
-  <script> 
-
-   function loaded(){
-    console.log('image loaded');
-  }
-    function alertFun() {
-      alert("Hello !");
-    }
-
-    function confirmFun() {
-      let didConfirm = confirm("Are you sure about that?");
-      if (didConfirm) {
-        alert("You confirmed :)");
-      } else {
-        alert("You did not confirm :(");
+      </tbody>
+    </table>
+  </main>
+  <script>
+ async function getData(url) {
+      try {
+        let response = await fetch(url);//1. Send http request and get response
+        let result = await response.json();//2. Get data from response
+        drawTable(result);// 3. Do something with the data
+      } catch (e) {
+        console.log(e);//catch and log any errors
       }
     }
+    getData("https://api.openbrewerydb.org/breweries/search?query=harry")
 
-    function promptFun() {
-      let val = prompt("What is your name?");
-      alert(`You've entered: ${val}`);
+    function drawTable(records) {
+      let result = document.querySelector('#result');
+      //add html code inside of result
+      let html = '';// create html string
+      for (let record of records) {
+        //build html string
+        html += `<tr>
+          <td>${record.id}</td>
+          <td>${record.name}</td>
+          <td>${record.brewery_type}</td>
+          <td>${record.website_url}</td>    
+        </tr>`;
+      }
+      result.innerHTML = html;//add html string to DOM
     }
 
-    const result = document.querySelector('#result');
-    result.innerHTML = '<h2>My Span</h2>';
-    result.style.color = 'blue';
-
-    function myFun(){
-   alert("hello");  
-   //console.log("myFun called");
-
-  }
-
-  function myFun2(){
-    console.log("myFun2 called");
-  }
-
- //receives the event parameter from addEventListener high order function
-  function logEventType(event){
-    console.log(event.type);
-  }
-  let myBtn = document.querySelector("#myBtn");
+    //testing the function
+    drawTable([{
+      id: 1,
+      name: "bob's",
+      brewery_type: "fire",
+      website_url: "https://bobs.com"
+    }]);
 
 
-  //attach myFun2 in addition to myFun to the click event of myBtn
-  myBtn.addEventListener("click", myFun2);
-
-  //There are other events such as mouseover and mouseout
-  
-  //Any callback passed to addeventListener receives an event object
-  myBtn.addEventListener("mouseover", logEventType);//logs 'mouseover'
-  myBtn.addEventListener("mouseout", logEventType);// logs 'mouseout'
- //these events will fire when the mouse pointer hovers/passes over the button
-
-  
-  //const myimg = document.querySelector('#myimg');
-
- //myimg.addEventListener('load',loaded);
-
+   
   </script>
-  <script src="script.js"></script>
-
 </body>
 
 </html>
